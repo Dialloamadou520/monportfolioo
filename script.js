@@ -59,13 +59,39 @@ document.addEventListener('DOMContentLoaded', function() {
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const formData = new FormData(contactForm);
-        const name = contactForm.querySelector('input[type="text"]').value;
-        const email = contactForm.querySelector('input[type="email"]').value;
-        const message = contactForm.querySelector('textarea').value;
+        // Récupérer les valeurs du formulaire
+        const name = document.getElementById('contact-name').value;
+        const email = document.getElementById('contact-email').value;
+        const phone = document.getElementById('contact-phone').value;
+        const subject = document.getElementById('contact-subject').value;
+        const message = document.getElementById('contact-message').value;
 
-        alert(`Merci ${name} ! Votre message a été envoyé avec succès.\n\nNote: Pour activer l'envoi réel, configurez un service backend (PHP, Node.js) ou un service tiers (EmailJS, Formspree, etc.)`);
+        // Construire le message WhatsApp
+        let whatsappMessage = `*Nouveau message du portfolio*\n\n`;
+        whatsappMessage += `👤 *Nom:* ${name}\n`;
+        whatsappMessage += `📧 *Email:* ${email}\n`;
+        if (phone) {
+            whatsappMessage += `📱 *Téléphone:* ${phone}\n`;
+        }
+        whatsappMessage += `📋 *Sujet:* ${subject}\n\n`;
+        whatsappMessage += `💬 *Message:*\n${message}`;
+
+        // Encoder le message pour l'URL
+        const encodedMessage = encodeURIComponent(whatsappMessage);
         
+        // Votre numéro WhatsApp (format international sans + ni espaces)
+        const whatsappNumber = '221773525382';
+        
+        // Créer l'URL WhatsApp
+        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        
+        // Ouvrir WhatsApp dans un nouvel onglet
+        window.open(whatsappURL, '_blank');
+        
+        // Afficher un message de confirmation
+        alert(`Merci ${name} ! Vous allez être redirigé vers WhatsApp pour envoyer votre message.`);
+        
+        // Réinitialiser le formulaire
         contactForm.reset();
     });
 
