@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
         html.classList.toggle('dark');
         const theme = html.classList.contains('dark') ? 'dark' : 'light';
         localStorage.setItem('theme', theme);
+        
+        // Add a subtle animation feedback
+        document.body.style.opacity = '0.95';
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+        }, 150);
     }
     
     themeToggle.addEventListener('click', toggleTheme);
@@ -29,6 +35,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const icon = mobileMenuBtn.querySelector('i');
         icon.classList.toggle('fa-bars');
         icon.classList.toggle('fa-times');
+        
+        // Add animation to menu items
+        if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.querySelectorAll('a').forEach((link, index) => {
+                link.style.opacity = '0';
+                link.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    link.style.transition = 'all 0.3s ease';
+                    link.style.opacity = '1';
+                    link.style.transform = 'translateX(0)';
+                }, index * 50);
+            });
+        }
     });
 
     mobileMenu.querySelectorAll('a').forEach(link => {
@@ -105,14 +124,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('animate-in');
             }
         });
     }, observerOptions);
 
     document.querySelectorAll('.skill-card, .project-card').forEach(card => {
         card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
         observer.observe(card);
     });
 
@@ -120,9 +140,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const nav = document.querySelector('nav');
         if (window.scrollY > 50) {
             nav.classList.add('shadow-lg');
+            nav.style.transform = 'translateY(0)';
         } else {
             nav.classList.remove('shadow-lg');
         }
+        
+        // Parallax effect for background elements
+        const scrolled = window.pageYOffset;
+        const parallaxElements = document.querySelectorAll('.animate-float');
+        parallaxElements.forEach(el => {
+            el.style.transform = `translateY(${scrolled * 0.1}px)`;
+        });
     });
 
     const sections = document.querySelectorAll('section[id]');
